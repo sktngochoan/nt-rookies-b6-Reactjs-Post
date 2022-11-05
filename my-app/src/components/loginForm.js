@@ -1,13 +1,34 @@
 import { Button, Checkbox, Form, Input } from 'antd';
-import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { login } from '../services';
 const LoginForm = () => {
-    const [user,setUser] = useState({name:'',password:''});
+  const [user, setUser] = useState({ username: '', password: '', remember: false });
+  const [dataUser, setDataUser] = useState({
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: '',
+    birthDate: ""
+  });
+
+  let navigate = useNavigate();
   const onFinish = (values) => {
-    console.log('Success:', values);
+    setUser(values);
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+  useEffect(() => {
+      login(user.username, user.password).then((res) => {
+        if (res?.data) {
+          setDataUser(res?.data);
+          console.log(dataUser);
+          navigate('/posts');
+        }
+      })
+  }, [user]);
   return (
     <Form
       name="basic"

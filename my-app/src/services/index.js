@@ -18,5 +18,5 @@ export const deletePost = async (id) => {
     return del(`${ENDPOINTS.POSTS}/${id}`);
 }
 export const login = async (username,password) => {
-    return get(`${ENDPOINTS.LOGIN}?username=${username}&&password=${password}`);
+    return get(`${ENDPOINTS. LOGIN}?username=${username}&&password=${password}`);
 }
