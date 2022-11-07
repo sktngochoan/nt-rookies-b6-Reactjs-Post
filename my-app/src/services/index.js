@@ -20,3 +20,6 @@ export const deletePost = async (id) => {
 export const login = async (username,password) => {
     return get(`${ENDPOINTS. LOGIN}?username=${username}&&password=${password}`);
 }
+export const searchPostByName = async (string) => {
+    return get(`${ENDPOINTS. POSTS}?search=${string}`);
+}
