@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
 import { Button, Modal, PageHeade, Space, Table, Tag } from 'antd';
-import { Typography,Input } from 'antd';
+import { Typography, Input } from 'antd';
 import { getPosts, deletePost, getPostDetail, searchPostByName } from '../services';
 import CreatePostForm from '../components/CreatePostForm';
 import { PostContextProvider } from '../layout/PostContext';
 import SearchBar from '../components/SearchBar';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 const { Search } = Input;
 const { Title } = Typography;
 
@@ -43,12 +45,12 @@ const Post = () => {
     },
   ];
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSearch,setSearch] = useState(false);
   const [isSuccessfull, setisSuccessfull] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
   const [posts, setPosts] = useState();
   const [id, setId] = useState();
+  const [idToDelete, setIdToDelete] = useState();
   const viewAllPost = () => {
     setisSuccessfull(true);
   }
@@ -67,37 +69,62 @@ const Post = () => {
   const setCrudSuccess = (val) => {
     setisSuccessfull(val);
   }
+
+  // useEffect(() => {
+  //   getPostDetail(idToSearch).then(data =>{
+  //     setPosts(data?.data);
+  //   }).catch(error => {
+  //   })
+    
+  // },[idToSearch]);
+
   const handleEdit = (idEdit) => {
     setId(idEdit);
   }
 
   const handleDelete = (idEdit) => {
-    setId(idEdit);
+    let text = `You want to delete post with id:${idEdit}`;
+    if (window.confirm(text) == true) {
+      setIdToDelete(idEdit);
+    } else {
+    }
   }
+
+  const deletePostAync = async () => {
+    deletePost(idToDelete).then(data => {
+      setisSuccessfull(true);
+    })
+  }
+  useEffect(() => {
+    deletePostAync().then(() => {
+    })
+  }, [idToDelete]);
+
   const handleSearch = (value) => {
-    console.log(value);
+    setSearch(true);
     setSearchValue(value);
-    console.log(searchValue);
   }
 
   const searchPost = async () => {
     searchPostByName(searchValue).then(data => {
-      console.log(data);
       setPosts(data?.data);
+      setSearch(false);
     })
   }
   useEffect(() => {
-    searchPost().then(() => {
-    })
+    if(isSearch === true){
+      searchPost().then(() => {
+      });
+    }
   }, [searchValue]);
   return (
 
     <React.Fragment>
       <CreatePostForm id={id} setCrudSuccess={(val) => setCrudSuccess(val)} />
-      <Button style={{ marginLeft: '100px'}} onClick={viewAllPost} color='@green-7'>View All Post</Button>
+      <Button style={{ marginLeft: '100px' }} onClick={viewAllPost} color='@green-7'>View All Post</Button>
       <Space style={{ marginLeft: '860px', marginBottom: '10px' }} className='1' direction="vertical">
         <Search className='2' placeholder="input search text" onSearch={handleSearch} enterButton />
-        
+
       </Space>
       {/* <SearchBar /> */}
       <Table columns={columns} dataSource={posts} />
