@@ -45,7 +45,8 @@ const Post = () => {
     },
   ];
 
-  const [isSearch,setSearch] = useState(false);
+  const [isSearch, setSearch] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   const [isSuccessfull, setisSuccessfull] = useState(false);
   const [searchValue, setSearchValue] = useState();
   const [posts, setPosts] = useState();
@@ -75,7 +76,7 @@ const Post = () => {
   //     setPosts(data?.data);
   //   }).catch(error => {
   //   })
-    
+
   // },[idToSearch]);
 
   const handleEdit = (idEdit) => {
@@ -84,6 +85,7 @@ const Post = () => {
 
   const handleDelete = (idEdit) => {
     let text = `You want to delete post with id:${idEdit}`;
+    setIsDelete(true);
     if (window.confirm(text) == true) {
       setIdToDelete(idEdit);
     } else {
@@ -96,8 +98,10 @@ const Post = () => {
     })
   }
   useEffect(() => {
-    deletePostAync().then(() => {
-    })
+    if (isDelete === true) {
+      deletePostAync().then(() => {
+      })
+    }
   }, [idToDelete]);
 
   const handleSearch = (value) => {
@@ -112,15 +116,23 @@ const Post = () => {
     })
   }
   useEffect(() => {
-    if(isSearch === true){
+    if (isSearch === true) {
       searchPost().then(() => {
       });
     }
   }, [searchValue]);
+
+  const setHidePopup = (val) => {
+      if (val) {
+        console.log(val)
+        setId(null);
+      }
+  }
+
   return (
 
     <React.Fragment>
-      <CreatePostForm id={id} setCrudSuccess={(val) => setCrudSuccess(val)} />
+      <CreatePostForm id={id} setCrudSuccess={(val) => setCrudSuccess(val)} setHidePopup={(val) => setHidePopup(val)} />
       <Button style={{ marginLeft: '100px' }} onClick={viewAllPost} color='@green-7'>View All Post</Button>
       <Space style={{ marginLeft: '860px', marginBottom: '10px' }} className='1' direction="vertical">
         <Search className='2' placeholder="input search text" onSearch={handleSearch} enterButton />

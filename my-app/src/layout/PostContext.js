@@ -7,6 +7,7 @@ export const PostContext = React.createContext({
 
 export const PostContextProvider = (props) => {
   const [crudSuccess, setCrudSuccess] = useState(false);
+  const [isShowModal, setIsShowModal] = useState(false);
 
   const setCrudStatus = (val) => {
     setCrudSuccess(val);

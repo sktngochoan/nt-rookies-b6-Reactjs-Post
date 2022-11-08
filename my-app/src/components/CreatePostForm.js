@@ -16,7 +16,7 @@ const schema = yup.object({
     description: yup.string().required()
 }).required();
 
-function CreatePostForm({ id, setCrudSuccess }) {
+function CreatePostForm({ id, setCrudSuccess, setHidePopup }) {
     const {
         control,
         formState: { errors },
@@ -32,6 +32,7 @@ function CreatePostForm({ id, setCrudSuccess }) {
     const [showModal, setShowModal] = useState(false);
     const postContext = useContext(PostContext);
     const [dataToUpdate,setDataToUpdate] = useState({});
+
     useEffect(() => {
         console.log(postContext)
     }, [postContext]);
@@ -58,7 +59,7 @@ function CreatePostForm({ id, setCrudSuccess }) {
     useEffect(() => {
         if (id) {
             setShowModal(true);
-            fetchPostDetail()
+            fetchPostDetail();
         }
     }, [id])
 
@@ -117,6 +118,7 @@ function CreatePostForm({ id, setCrudSuccess }) {
                 afterClose={() => reset({})}
                 onCancel={() => {
                     setShowModal(false);
+                    setHidePopup(true);
                 }}>
                 <Form
                     noValidate
